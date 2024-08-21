@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
 	kotlin("jvm") version "1.9.24"
 	kotlin("plugin.spring") version "1.9.24"
@@ -6,6 +8,7 @@ plugins {
 	kotlin("plugin.jpa") version "1.9.24"
 	kotlin("plugin.allopen") version "1.9.23"
 	kotlin("plugin.noarg") version "1.9.23"
+	id("org.jetbrains.kotlin.kapt") version "1.9.24"
 }
 
 group = "com.example"
@@ -27,6 +30,13 @@ repositories {
 	mavenCentral()
 }
 
+configurations {
+	compileOnly {
+		extendsFrom(configurations.annotationProcessor.get())
+	}
+}
+
+
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
@@ -41,14 +51,22 @@ dependencies {
 	// queryDsl 관련 코드생성 기능 제공
 	implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
 	// queryDsl 라이브러리
-	annotationProcessor ("com.querydsl:querydsl-apt:5.0.0:jakarta")
-	annotationProcessor ("jakarta.annotation:jakarta.annotation-api")
-	annotationProcessor ("jakarta.persistence:jakarta.persistence-api")
-}
+	kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")
+	kapt("jakarta.annotation:jakarta.annotation-api")
+	kapt("jakarta.persistence:jakarta.persistence-api")
 
-kotlin {
-	compilerOptions {
-		freeCompilerArgs.addAll("-Xjsr305=strict")
+}
+sourceSets {
+	main {
+		java {
+			srcDir("build/generated/source/kapt/main")
+		}
+	}
+}
+tasks.withType<KotlinCompile> {
+	kotlinOptions {
+		freeCompilerArgs += "-Xjsr305=strict"
+		jvmTarget = "17"
 	}
 }
 
