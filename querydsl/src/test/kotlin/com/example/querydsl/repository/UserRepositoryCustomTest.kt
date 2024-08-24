@@ -49,4 +49,25 @@ class UserRepositoryCustomTest(
             tuple(4L, "bob.johnson@example.com", "Bob Johnson", 28)
         );
     }
+
+    @Test
+    @DisplayName("팀 이름으로 유저를 조회한다.")  // "Fetch users by team name."
+    fun `should find users by team name`() {
+        // given
+        val teamName = "Engineering"
+
+        // when
+        val users: List<User> = userRepositoryCustom.findUserByTeamNameJoinFetch(teamName)
+
+        // then
+        assertThat(users).extracting(
+            User::id,
+            User::email,
+            User::name,
+            User::age
+        ).containsExactly(
+            tuple(1L, "john.doe@example.com", "John Doe", 25),
+            tuple(3L, "alice.smith@example.com", "Alice Smith", 22)
+        )
+    }
 }

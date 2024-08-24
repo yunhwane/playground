@@ -1,5 +1,6 @@
 package com.example.querydsl.repository
 
+import com.example.querydsl.entity.QTeam.team
 import com.example.querydsl.entity.QUser.user
 import com.example.querydsl.entity.User
 import com.querydsl.jpa.impl.JPAQueryFactory
@@ -23,6 +24,16 @@ class UserRepositoryCustom(
         return jpaQueryFactory
             .selectFrom(user)
             .fetch()
+    }
+
+
+    fun findUserByTeamNameJoinFetch(teamName: String): List<User> {
+        return jpaQueryFactory
+            .selectFrom(user)
+            .join(user.team, team)  // Join the user.team with team entity
+            .fetchJoin()            // Ensure team entities are fetched eagerly
+            .where(user.team.name.eq(teamName))  // Filter by team name
+            .fetch()                // Execute the query and fetch the result list
     }
 
 
