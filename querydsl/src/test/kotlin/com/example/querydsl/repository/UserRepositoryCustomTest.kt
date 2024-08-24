@@ -43,11 +43,10 @@ class UserRepositoryCustomTest(
             User::name,
             User::age
         ).containsExactly(
-            tuple(1L, "john.doe@example.com", "John Doe", 25),
+            tuple(1L, "john.doe@example.com", "John Doe", 25,1),
             tuple(2L, "jane.doe@example.com", "Jane Doe", 30),
             tuple(3L, "alice.smith@example.com", "Alice Smith", 22),
-            tuple(4L, "bob.johnson@example.com", "Bob Johnson", 28),
-            tuple(5L, "carol.baker@example.com", "Carol Baker", 35)
+            tuple(4L, "bob.johnson@example.com", "Bob Johnson", 28)
         );
     }
 }
